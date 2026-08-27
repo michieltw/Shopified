@@ -17,7 +17,7 @@ class ConfiguratorState {
         const buildCode = params.get('build');
         if (buildCode) {
             try {
-                const decodedState = JSON.parse(atob(buildCode));
+                const decodedState = JSON.parse(decodeURIComponent(escape(atob(buildCode))));
                 this.state = { ...this.state, ...decodedState };
             } catch (e) {
                 console.error("Invalid build code");
@@ -26,7 +26,7 @@ class ConfiguratorState {
     }
 
     getBuildCode() {
-        return btoa(JSON.stringify(this.state));
+        return btoa(unescape(encodeURIComponent(JSON.stringify(this.state))));
     }
 
     setValue(optionId, value) {
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.value = state.state[opt.id];
                 input.placeholder = 'e.g. SMITH 99';
                 input.className = 'bg-black border border-gray-700 text-white p-2 rounded w-full max-w-xs uppercase';
-                input.addEventListener('input', (e) => handleSelect(opt.id, e.target.value));
+                input.addEventListener('change', (e) => handleSelect(opt.id, e.target.value));
                 group.appendChild(input);
             }
             else if (opt.type === 'select') {
@@ -178,7 +178,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         CONFIGURATOR_DATA.options.forEach(opt => {
             const li = document.createElement('li');
-            li.innerHTML = `<span class="text-gray-500">${opt.name}:</span> <span class="text-white">${state.state[opt.id]}</span>`;
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'text-gray-500';
+            nameSpan.textContent = opt.name + ': ';
+
+            const valueSpan = document.createElement('span');
+            valueSpan.className = 'text-white';
+            valueSpan.textContent = state.state[opt.id];
+
+            li.appendChild(nameSpan);
+            li.appendChild(valueSpan);
             list.appendChild(li);
         });
 
