@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "guided-selling-quiz",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

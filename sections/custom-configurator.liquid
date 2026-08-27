@@ -1,0 +1,134 @@
+{{ 'configurator.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'configurator.js' | asset_url }}" defer="defer"></script>
+
+<div class="blackout-configurator" data-section-id="{{ section.id }}">
+  <div class="configurator-layout">
+
+    <!-- Left Side: Visualizer -->
+    <div class="configurator-visualizer">
+      <div class="visualizer-header">
+        <img src="{{ 'blackout_logo.png' | asset_url }}" alt="Blackout Hockey" class="logo">
+        <button class="btn-text" id="btn-ask-advice">{{ section.settings.advice_text }}</button>
+      </div>
+
+      <div class="stick-preview-container" id="stick-preview-container">
+        <!-- Base layer (always present) -->
+        <img src="{{ section.settings.base_stick_image | image_url: width: 800 }}" class="stick-layer layer-base" alt="Stick Base">
+        <!-- Dynamic layers injected by JS based on selection -->
+        <div id="dynamic-layers"></div>
+      </div>
+    </div>
+
+    <!-- Right Side: Controls -->
+    <div class="configurator-controls">
+      <div class="controls-header">
+        <h1 class="title">{{ section.settings.title }}</h1>
+        <p class="subtitle">{{ section.settings.subtitle }}</p>
+      </div>
+
+      <div class="options-container" id="options-container">
+        <!-- Options injected here by JS -->
+      </div>
+
+      <!-- Performance Indicators (Read-only) -->
+      <div class="performance-indicators mt-8">
+        <h3 class="section-title">Performance Indicators</h3>
+        <div class="radar-stats">
+          <div class="stat-row"><span>Power</span> <div class="bar"><div class="fill" style="width: 85%"></div></div></div>
+          <div class="stat-row"><span>Speed</span> <div class="bar"><div class="fill" style="width: 92%"></div></div></div>
+          <div class="stat-row"><span>Accuracy</span> <div class="bar"><div class="fill" style="width: 90%"></div></div></div>
+          <div class="stat-row"><span>Agility</span> <div class="bar"><div class="fill" style="width: 88%"></div></div></div>
+          <div class="stat-row"><span>Durability</span> <div class="bar"><div class="fill" style="width: 95%"></div></div></div>
+          <div class="stat-row"><span>Sensitivity</span> <div class="bar"><div class="fill" style="width: 80%"></div></div></div>
+        </div>
+        <div class="text-stats mt-4">
+          <p><strong>Material:</strong> {{ section.settings.material_text }}</p>
+          <p><strong>Estimated Delivery:</strong> <span id="delivery-estimate">{{ section.settings.delivery_text }}</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Footer for Mobile & Desktop -->
+  <div class="configurator-footer">
+    <button class="btn-secondary" id="btn-overview">Overview</button>
+    <div class="price-display">
+      <span class="currency">{{ cart.currency.symbol }}</span><span id="total-price">{{ section.settings.base_price }}</span>
+    </div>
+    <div class="action-buttons">
+      <button class="btn-primary" id="btn-pdf">Get PDF</button>
+      <button class="btn-primary" id="btn-checkout">Checkout</button>
+    </div>
+  </div>
+
+  <!-- Overview Modal -->
+  <div id="overview-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Build Summary</h2>
+        <button id="btn-close-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-gray-400 mb-2 uppercase">Unique Build Code</p>
+        <div class="build-code-box">
+          <code id="build-code-display"></code>
+        </div>
+        <ul id="summary-list" class="summary-list"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stick Configurator",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Build Your Stick"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Select your options below. Changes update in real-time."
+    },
+    {
+      "type": "number",
+      "id": "base_price",
+      "label": "Base Price",
+      "default": 200
+    },
+    {
+      "type": "text",
+      "id": "advice_text",
+      "label": "Advice Button Text",
+      "default": "Ask for Advice"
+    },
+    {
+      "type": "text",
+      "id": "material_text",
+      "label": "Material Description",
+      "default": "100% 18K Toray Carbon Fiber"
+    },
+    {
+      "type": "text",
+      "id": "delivery_text",
+      "label": "Base Delivery Estimate",
+      "default": "4-6 Weeks"
+    },
+    {
+      "type": "image_picker",
+      "id": "base_stick_image",
+      "label": "Base Stick Image (Placeholder)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stick Configurator"
+    }
+  ]
+}
+{% endschema %}
