@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackout Hockey - Stick Recommender</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-black text-white font-sans antialiased">
+    <header class="p-6 text-center border-b border-gray-800">
+        <img src="assets/Blackout_White_on_Black.png" alt="Blackout Hockey" class="h-8 mx-auto">
+        <h1 class="text-2xl font-bold mt-4">Stick Finder</h1>
+        <p class="text-gray-400 text-sm mt-2">Answer a few questions to get your perfect stick recommendation.</p>
+    </header>
+
+    <main class="max-w-2xl mx-auto p-6">
+        <form id="quiz-form" class="space-y-8">
+            <!-- Q1 -->
+            <div class="question-block">
+                <h2 class="text-lg font-semibold mb-4">1. Are you a Goalie or a Player?</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="block">
+                        <input type="radio" name="type" value="Player" class="peer hidden" checked>
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Player</div>
+                    </label>
+                    <label class="block">
+                        <input type="radio" name="type" value="Goalie" class="peer hidden">
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Goalie</div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="question-block">
+                <h2 class="text-lg font-semibold mb-4">2. What is your age/size category?</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="block">
+                        <input type="radio" name="category" value="Senior" class="peer hidden" checked>
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Senior</div>
+                    </label>
+                    <label class="block">
+                        <input type="radio" name="category" value="Intermediate" class="peer hidden">
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Intermediate</div>
+                    </label>
+                    <label class="block">
+                        <input type="radio" name="category" value="Junior" class="peer hidden">
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Junior</div>
+                    </label>
+                    <label class="block">
+                        <input type="radio" name="category" value="Youth" class="peer hidden">
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Youth</div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="question-block">
+                <h2 class="text-lg font-semibold mb-4">3. Do you prefer a quick release or maximum power?</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="block">
+                        <input type="radio" name="playstyle" value="quick" class="peer hidden" checked>
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Quick Release (Low Kick)</div>
+                    </label>
+                    <label class="block">
+                        <input type="radio" name="playstyle" value="power" class="peer hidden">
+                        <div class="p-4 border border-gray-700 rounded-md cursor-pointer peer-checked:border-white peer-checked:bg-gray-900 text-center">Max Power (Mid Kick)</div>
+                    </label>
+                </div>
+            </div>
+
+            <button type="button" id="submit-quiz" class="w-full bg-white text-black font-bold py-4 rounded-md uppercase tracking-wider hover:bg-gray-200 transition">Get Recommendation</button>
+        </form>
+
+        <div id="result-block" class="hidden mt-12 text-center border border-gray-700 p-8 rounded-md bg-gray-900">
+            <h2 class="text-2xl font-bold mb-2">We found your match</h2>
+            <p class="text-gray-400 mb-6">Based on your answers, we've pre-configured a stick for you. You can tweak it further in the configurator.</p>
+            <a id="configurator-link" href="#" class="inline-block bg-white text-black font-bold py-3 px-8 rounded-md uppercase tracking-wider hover:bg-gray-200 transition">Customize Your Stick</a>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('submit-quiz').addEventListener('click', () => {
+            const formData = new FormData(document.getElementById('quiz-form'));
+            const type = formData.get('type');
+            const category = formData.get('category');
+            const playstyle = formData.get('playstyle');
+
+            // Map answers to configurator options (Mock Logic)
+            const recommendedOptions = {
+                type: type,
+                category: category,
+                flexProfile: playstyle === 'quick' ? 'Low kick' : 'Mid kick',
+                flex: category === 'Senior' ? '65-125' : (category === 'Junior' ? '20-50' : '50-65')
+            };
+
+            // Encode to Base64 (mock implementation of build code)
+            const buildCode = btoa(JSON.stringify(recommendedOptions));
+
+            // Show result
+            document.getElementById('quiz-form').classList.add('hidden');
+            document.getElementById('result-block').classList.remove('hidden');
+
+            // Set link
+            document.getElementById('configurator-link').href = `index.html?build=${buildCode}`;
+        });
+    </script>
+</body>
+</html>
