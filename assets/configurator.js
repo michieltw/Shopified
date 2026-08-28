@@ -4,17 +4,32 @@
    * Shopify Native JavaScript Logic
    */
 
-  // Hardcoded for demo/setup - in a real Shopify app,
-  // this would be printed out by Liquid from Metaobjects in the .liquid section
-  const CONFIGURATOR_DATA = {
-    options: [
-      {
-        id: "amount",
-        name: "Stick(s) amount",
-        type: "number",
-        default: 1,
-        min: 1,
-      },
+  // Read dynamic options from Shopify Liquid if available
+  let CONFIGURATOR_DATA = { options: [] };
+  const dataScript = document.getElementById("configurator-options-data");
+
+  if (dataScript) {
+    try {
+      const parsed = JSON.parse(dataScript.textContent);
+      if (parsed && parsed.length > 0) {
+        CONFIGURATOR_DATA.options = parsed;
+      }
+    } catch(e) {
+      console.error("Error parsing configurator options data", e);
+    }
+  }
+
+  // Fallback to hardcoded list if none provided by Editor
+  if (CONFIGURATOR_DATA.options.length === 0) {
+    CONFIGURATOR_DATA = {
+      options: [
+        {
+          id: "amount",
+          name: "Stick(s) amount",
+          type: "number",
+          default: 1,
+          min: 1,
+        },
       {
         id: "hand",
         name: "Stick hand",
@@ -202,8 +217,8 @@
         ],
         default: "Premolded",
       },
-    ],
-  };
+    ]};
+  }
 
   class ConfiguratorState {
     constructor() {
@@ -393,12 +408,17 @@
 
       // Delivery Estimate
       const deliveryEstimate = document.getElementById("delivery-estimate");
-      if (deliveryEstimate) {
+      const configuratorRoot = document.querySelector(".blackout-configurator");
+
+      if (deliveryEstimate && configuratorRoot) {
+        const baseEstimate = configuratorRoot.dataset.deliveryBase || "4-6 Weeks";
+        const premiumEstimate = configuratorRoot.dataset.deliveryPremium || "6-8 Weeks";
+
         if (state.state.bladecurve === "Full Custom (+€30)" || state.state.mold === "Custom mold") {
-          deliveryEstimate.textContent = "6-8 Weeks";
+          deliveryEstimate.textContent = premiumEstimate;
           deliveryEstimate.classList.add("text-highlight");
         } else {
-          deliveryEstimate.textContent = "4-6 Weeks";
+          deliveryEstimate.textContent = baseEstimate;
           deliveryEstimate.classList.remove("text-highlight");
         }
       }
