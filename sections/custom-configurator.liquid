@@ -4,7 +4,25 @@
 
 {% assign base_product = section.settings.base_product %}
 {% assign base_variant = base_product.selected_or_first_available_variant %}
-<div class="blackout-configurator" data-section-id="{{ section.id }}" data-variant-id="{{ base_variant.id }}">
+
+<script type="application/json" id="configurator-options-data">
+  [
+    {% for block in section.blocks %}
+      {
+        "id": {{ block.settings.id | json }},
+        "name": {{ block.settings.title | json }},
+        "type": {{ block.settings.type | json }},
+        "options": [{% assign opts = block.settings.options_list | split: ',' %}{% for opt in opts %}{{ opt | strip | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+        "default": {{ block.settings.default_value | json }},
+        "surcharges": {% if block.settings.surcharges_json != blank %}{{ block.settings.surcharges_json }}{% else %}{}{% endif %},
+        "min": {{ block.settings.min_value | default: 1 | json }},
+        "info": {{ block.settings.info_text | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+</script>
+
+<div class="blackout-configurator" data-section-id="{{ section.id }}" data-variant-id="{{ base_variant.id }}" data-delivery-base="{{ section.settings.delivery_text | escape }}" data-delivery-premium="{{ section.settings.delivery_text_premium | default: '6-8 Weeks' | escape }}">
   <div class="configurator-layout">
 
     <!-- Left Side: Visualizer -->
@@ -81,6 +99,19 @@
       </div>
     </div>
   </div>
+
+  <!-- Info Modal -->
+  <div id="info-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="info-modal-title">Information</h2>
+        <button id="btn-close-info-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body" id="info-modal-body">
+        <!-- Content injected via JS -->
+      </div>
+    </div>
+  </div>
 </div>
 
 {% schema %}
@@ -129,9 +160,73 @@
       "default": "4-6 Weeks"
     },
     {
+      "type": "text",
+      "id": "delivery_text_premium",
+      "label": "Premium Delivery Estimate",
+      "default": "6-8 Weeks"
+    },
+    {
       "type": "image_picker",
       "id": "base_stick_image",
       "label": "Base Stick Image (Placeholder)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "configurator_option",
+      "name": "Configurator Option",
+      "settings": [
+        {
+          "type": "text",
+          "id": "id",
+          "label": "Option ID (e.g. flexProfile)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Display Name"
+        },
+        {
+          "type": "richtext",
+          "id": "info_text",
+          "label": "Information Popup Text",
+          "info": "Leave blank to disable the info button for this option."
+        },
+        {
+          "type": "select",
+          "id": "type",
+          "label": "Input Type",
+          "options": [
+            { "value": "select", "label": "Select Buttons" },
+            { "value": "text", "label": "Text Input" },
+            { "value": "number", "label": "Number Input" }
+          ],
+          "default": "select"
+        },
+        {
+          "type": "textarea",
+          "id": "options_list",
+          "label": "Options List (Comma separated for 'select')",
+          "info": "E.g.: Low kick, Mid kick, High kick"
+        },
+        {
+          "type": "text",
+          "id": "default_value",
+          "label": "Default Value"
+        },
+        {
+          "type": "textarea",
+          "id": "surcharges_json",
+          "label": "Surcharges (JSON Object)",
+          "info": "E.g.: {\"Full Custom (+€30)\": 30}"
+        },
+        {
+          "type": "number",
+          "id": "min_value",
+          "label": "Minimum Value (for 'number' type)",
+          "default": 1
+        }
+      ]
     }
   ],
   "presets": [
