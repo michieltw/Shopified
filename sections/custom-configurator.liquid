@@ -1,4 +1,5 @@
 {{ 'configurator.css' | asset_url | stylesheet_tag }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ 'configurator.js' | asset_url }}" defer="defer"></script>
 
 {% assign base_product = section.settings.base_product %}
@@ -36,12 +37,12 @@
       <div class="performance-indicators mt-8">
         <h3 class="section-title">Performance Indicators</h3>
         <div class="radar-stats">
-          <div class="stat-row"><span>Power</span> <div class="bar"><div class="fill" style="width: 85%"></div></div></div>
-          <div class="stat-row"><span>Speed</span> <div class="bar"><div class="fill" style="width: 92%"></div></div></div>
-          <div class="stat-row"><span>Accuracy</span> <div class="bar"><div class="fill" style="width: 90%"></div></div></div>
-          <div class="stat-row"><span>Agility</span> <div class="bar"><div class="fill" style="width: 88%"></div></div></div>
-          <div class="stat-row"><span>Durability</span> <div class="bar"><div class="fill" style="width: 95%"></div></div></div>
-          <div class="stat-row"><span>Sensitivity</span> <div class="bar"><div class="fill" style="width: 80%"></div></div></div>
+          <div class="stat-row"><span>Power</span> <div class="bar"><div class="fill" id="stat-power" style="width: 85%"></div></div></div>
+          <div class="stat-row"><span>Speed</span> <div class="bar"><div class="fill" id="stat-speed" style="width: 92%"></div></div></div>
+          <div class="stat-row"><span>Accuracy</span> <div class="bar"><div class="fill" id="stat-accuracy" style="width: 90%"></div></div></div>
+          <div class="stat-row"><span>Agility</span> <div class="bar"><div class="fill" id="stat-agility" style="width: 88%"></div></div></div>
+          <div class="stat-row"><span>Durability</span> <div class="bar"><div class="fill" id="stat-durability" style="width: 95%"></div></div></div>
+          <div class="stat-row"><span>Sensitivity</span> <div class="bar"><div class="fill" id="stat-sensitivity" style="width: 80%"></div></div></div>
         </div>
         <div class="text-stats mt-4">
           <p><strong>Material:</strong> {{ section.settings.material_text }}</p>
@@ -54,6 +55,7 @@
   <!-- Sticky Footer for Mobile & Desktop -->
   <div class="configurator-footer">
     <button class="btn-secondary" id="btn-overview">Overview</button>
+    <button class="btn-secondary" id="btn-share">Share Link</button>
     <div class="price-display">
       <span class="currency">{{ cart.currency.symbol }}</span><span id="total-price">{{ section.settings.base_price }}</span>
     </div>

@@ -367,6 +367,42 @@
 
       updateVisualizer();
 
+      // Dynamic Stats
+      let pwr = 85, spd = 92, acc = 90, agi = 88, dur = 95, sen = 80;
+      if (state.state.flexProfile === "High kick") pwr += 5;
+      if (state.state.flexProfile === "Ultra-low kick") spd += 5;
+      if (state.state.weight === "Ultra lightweight (+€50)") {
+        pwr -= 5;
+        dur -= 10;
+        sen += 5;
+      }
+
+      const statPower = document.getElementById("stat-power");
+      const statSpeed = document.getElementById("stat-speed");
+      const statAccuracy = document.getElementById("stat-accuracy");
+      const statAgility = document.getElementById("stat-agility");
+      const statDurability = document.getElementById("stat-durability");
+      const statSensitivity = document.getElementById("stat-sensitivity");
+
+      if (statPower) statPower.style.width = pwr + "%";
+      if (statSpeed) statSpeed.style.width = spd + "%";
+      if (statAccuracy) statAccuracy.style.width = acc + "%";
+      if (statAgility) statAgility.style.width = agi + "%";
+      if (statDurability) statDurability.style.width = dur + "%";
+      if (statSensitivity) statSensitivity.style.width = sen + "%";
+
+      // Delivery Estimate
+      const deliveryEstimate = document.getElementById("delivery-estimate");
+      if (deliveryEstimate) {
+        if (state.state.bladecurve === "Full Custom (+€30)" || state.state.mold === "Custom mold") {
+          deliveryEstimate.textContent = "6-8 Weeks";
+          deliveryEstimate.classList.add("text-highlight");
+        } else {
+          deliveryEstimate.textContent = "4-6 Weeks";
+          deliveryEstimate.classList.remove("text-highlight");
+        }
+      }
+
       // Update URL safely with history API without reloading
       const url = new URL(window.location);
       url.searchParams.set("build", state.getBuildCode());
@@ -408,6 +444,54 @@
       btnCloseModal.addEventListener("click", () =>
         modal.classList.add("hidden"),
       );
+    }
+
+    // PDF Export Logic
+    const btnPdf = document.getElementById("btn-pdf");
+    if (btnPdf) {
+      btnPdf.addEventListener("click", () => {
+        // Ensure summary list is populated before cloning
+        buildCodeDisplay.textContent = state.getBuildCode();
+        summaryList.innerHTML = "";
+        CONFIGURATOR_DATA.options.forEach((opt) => {
+          const li = document.createElement("li");
+          const label = document.createElement("span");
+          label.className = "label";
+          label.textContent = opt.name + ": ";
+          const val = document.createElement("span");
+          val.textContent = state.state[opt.id];
+          li.appendChild(label);
+          li.appendChild(val);
+          summaryList.appendChild(li);
+        });
+
+        // Select the modal content to export
+        const contentToExport = document.querySelector(".modal-content");
+        if (contentToExport && window.html2pdf) {
+          const clone = contentToExport.cloneNode(true);
+          // Apply minimal styling for a clean PDF if needed
+          clone.style.padding = "20px";
+          clone.style.color = "#000";
+          clone.style.backgroundColor = "#fff";
+
+          // Use html2pdf to generate
+          html2pdf().from(clone).save('blackout-hockey-build.pdf');
+        }
+      });
+    }
+
+    // Share Link Logic
+    const btnShare = document.getElementById("btn-share");
+    if (btnShare) {
+      btnShare.addEventListener("click", () => {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          const originalText = btnShare.textContent;
+          btnShare.textContent = "Copied!";
+          setTimeout(() => {
+            btnShare.textContent = originalText;
+          }, 2000);
+        }).catch(err => console.error("Could not copy link:", err));
+      });
     }
 
     // Checkout Logic (Shopify AJAX Cart integration placeholder)
