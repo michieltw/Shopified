@@ -1,19 +1,21 @@
 {{ 'configurator.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'configurator.js' | asset_url }}" defer="defer"></script>
 
-<div class="blackout-configurator" data-section-id="{{ section.id }}">
+{% assign base_product = section.settings.base_product %}
+{% assign base_variant = base_product.selected_or_first_available_variant %}
+<div class="blackout-configurator" data-section-id="{{ section.id }}" data-variant-id="{{ base_variant.id }}">
   <div class="configurator-layout">
 
     <!-- Left Side: Visualizer -->
     <div class="configurator-visualizer">
       <div class="visualizer-header">
-        <img src="{{ 'blackout_logo.png' | asset_url }}" alt="Blackout Hockey" class="logo">
+        <img src="{{ 'blackout_logo.png' | asset_url }}" alt="Blackout Hockey" class="logo" loading="lazy">
         <button class="btn-text" id="btn-ask-advice">{{ section.settings.advice_text }}</button>
       </div>
 
       <div class="stick-preview-container" id="stick-preview-container">
         <!-- Base layer (always present) -->
-        <img src="{{ section.settings.base_stick_image | image_url: width: 800 }}" class="stick-layer layer-base" alt="Stick Base">
+        <img src="{{ section.settings.base_stick_image | image_url: width: 800 }}" class="stick-layer layer-base" alt="Stick Base" loading="lazy">
         <!-- Dynamic layers injected by JS based on selection -->
         <div id="dynamic-layers"></div>
       </div>
@@ -83,6 +85,11 @@
 {
   "name": "Stick Configurator",
   "settings": [
+    {
+      "type": "product",
+      "id": "base_product",
+      "label": "Base Product for Checkout"
+    },
     {
       "type": "text",
       "id": "title",

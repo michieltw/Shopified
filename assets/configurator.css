@@ -6,7 +6,7 @@
   --bkh-light-grey: #e0e0e0;
   --bkh-white: #ffffff;
   --bkh-accent: #ffffff; /* Could be changed via theme settings */
-  --bkh-font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --bkh-font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -89,10 +89,20 @@ body {
   max-width: 800px;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .stick-layer {
   width: 100%;
   height: auto;
   display: block;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 #dynamic-layers img {
@@ -101,6 +111,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Controls (Right Panel) */
@@ -160,7 +171,7 @@ body {
   font-size: 0.875rem;
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   text-align: center;
 }
 
@@ -181,8 +192,10 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: var(--bkh-black);
-  border-top: 1px solid var(--bkh-mid-grey);
+  background-color: rgba(5, 5, 5, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -201,7 +214,8 @@ body {
 }
 
 /* Inputs & Buttons */
-.input-text, .input-number {
+.input-text,
+.input-number {
   background-color: var(--bkh-black);
   border: 1px solid var(--bkh-mid-grey);
   color: var(--bkh-white);
@@ -225,6 +239,7 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -240,6 +255,7 @@ body {
   text-transform: uppercase;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
@@ -279,12 +295,15 @@ body {
 }
 
 .modal-content {
-  background-color: var(--bkh-dark-grey);
+  background-color: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
-  border: 1px solid var(--bkh-mid-grey);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {

@@ -1,18 +1,18 @@
 {{ 'configurator.css' | asset_url | stylesheet_tag }}
 
-<div class="guided-selling-container blackout-theme">
-  <div class="quiz-box">
-    <h1>{{ section.settings.heading }}</h1>
-    <p>{{ section.settings.subheading }}</p>
+<div class="guided-selling-container blackout-theme" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: var(--bkh-black);">
+  <div class="quiz-box" style="background-color: rgba(26, 26, 26, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 3rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); max-width: 600px; width: 100%; text-align: center;">
+    <h1 style="font-size: 2rem; margin-bottom: 1rem; color: var(--bkh-white);">{{ section.settings.heading }}</h1>
+    <p style="color: var(--bkh-light-grey); margin-bottom: 2rem;">{{ section.settings.subheading }}</p>
 
     <div id="quiz-content" class="mt-8">
       <!-- Quiz logic handled by JS -->
-      <div class="question">
-        <h3>What is your play style?</h3>
-        <div class="options">
-          <button class="btn-quiz" data-value="sniper">Sniper (Quick Release)</button>
-          <button class="btn-quiz" data-value="playmaker">Playmaker (Puck Control)</button>
-          <button class="btn-quiz" data-value="power">Power (Heavy Shots)</button>
+      <div class="question" style="margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1rem; color: var(--bkh-white);">What is your play style?</h3>
+        <div class="options" style="display: flex; flex-direction: column; gap: 1rem;">
+          <button class="btn-secondary btn-quiz" data-value="sniper" style="width: 100%;">Sniper (Quick Release)</button>
+          <button class="btn-secondary btn-quiz" data-value="playmaker" style="width: 100%;">Playmaker (Puck Control)</button>
+          <button class="btn-secondary btn-quiz" data-value="power" style="width: 100%;">Power (Heavy Shots)</button>
         </div>
       </div>
 
