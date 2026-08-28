@@ -15,7 +15,8 @@
         "options": [{% assign opts = block.settings.options_list | split: ',' %}{% for opt in opts %}{{ opt | strip | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
         "default": {{ block.settings.default_value | json }},
         "surcharges": {% if block.settings.surcharges_json != blank %}{{ block.settings.surcharges_json }}{% else %}{}{% endif %},
-        "min": {{ block.settings.min_value | default: 1 | json }}
+        "min": {{ block.settings.min_value | default: 1 | json }},
+        "info": {{ block.settings.info_text | json }}
       }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ]
@@ -98,6 +99,19 @@
       </div>
     </div>
   </div>
+
+  <!-- Info Modal -->
+  <div id="info-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="info-modal-title">Information</h2>
+        <button id="btn-close-info-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body" id="info-modal-body">
+        <!-- Content injected via JS -->
+      </div>
+    </div>
+  </div>
 </div>
 
 {% schema %}
@@ -171,6 +185,12 @@
           "type": "text",
           "id": "title",
           "label": "Display Name"
+        },
+        {
+          "type": "richtext",
+          "id": "info_text",
+          "label": "Information Popup Text",
+          "info": "Leave blank to disable the info button for this option."
         },
         {
           "type": "select",

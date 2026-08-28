@@ -297,10 +297,48 @@
         const group = document.createElement("div");
         group.className = "option-group";
 
+        const headerWrapper = document.createElement("div");
+        headerWrapper.className = "option-group-header";
+        headerWrapper.style.display = "flex";
+        headerWrapper.style.alignItems = "center";
+        headerWrapper.style.justifyContent = "space-between";
+
         const title = document.createElement("h3");
         title.className = "option-group-title";
         title.textContent = opt.name;
-        group.appendChild(title);
+        headerWrapper.appendChild(title);
+
+        if (opt.info && opt.info.trim() !== "") {
+          const infoBtn = document.createElement("button");
+          infoBtn.className = "btn-icon info-btn";
+          infoBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          `;
+          infoBtn.title = "More information";
+          infoBtn.style.cursor = "pointer";
+          infoBtn.style.background = "none";
+          infoBtn.style.border = "none";
+          infoBtn.style.color = "#999";
+          infoBtn.style.padding = "4px";
+          infoBtn.addEventListener("click", () => {
+            const infoModalTitle = document.getElementById("info-modal-title");
+            const infoModalBody = document.getElementById("info-modal-body");
+            const infoModal = document.getElementById("info-modal");
+
+            if (infoModalTitle && infoModalBody && infoModal) {
+              infoModalTitle.textContent = opt.name;
+              infoModalBody.innerHTML = opt.info;
+              infoModal.classList.remove("hidden");
+            }
+          });
+          headerWrapper.appendChild(infoBtn);
+        }
+
+        group.appendChild(headerWrapper);
 
         if (opt.type === "number") {
           const input = document.createElement("input");
@@ -463,6 +501,14 @@
     if (btnCloseModal) {
       btnCloseModal.addEventListener("click", () =>
         modal.classList.add("hidden"),
+      );
+    }
+
+    const btnCloseInfoModal = document.getElementById("btn-close-info-modal");
+    const infoModal = document.getElementById("info-modal");
+    if (btnCloseInfoModal && infoModal) {
+      btnCloseInfoModal.addEventListener("click", () =>
+        infoModal.classList.add("hidden")
       );
     }
 
